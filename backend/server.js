@@ -9,8 +9,8 @@ const port = process.env.port || 8000
 const url = 'mongodb+srv://admin:test1234@cluster0.bqiaplq.mongodb.net/?retryWrites=true&w=majority'
 const cors = require('cors');
 const passport = require('passport');
-//const LocalStrategy = require('passport-local').Strategy;
-// const bodyParser = require("body-parser");
+const LocalStrategy = require('passport-local').Strategy;
+const bodyParser = require("body-parser");
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -18,23 +18,21 @@ app.use(session({
     saveUninitialized: false
 }))
 
+app.use(cors())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+
+// use static serialize and deserialize of model for passport session support
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
-
 // auth setup
 const User = require('./models/user');
-passport.use(User.createStrategy());
-User.watch().on('change', data => console.log(new Date(), data));
-
-// use static serialize and deserialize of model for passport session support
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
+User.watch().on('change', data => console.log(new Date(), data));
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
@@ -108,9 +106,7 @@ app.post("/api/login", (req, res) => {
         res.json({ success: false, message: "Password was not given" })
     }
     else {
-        console.log('in');
         passport.authenticate("local", function (err, user, info) {
-            console.log(err)
             if (err) {
                 res.json({ success: false, message: err });
             }
@@ -119,10 +115,23 @@ app.post("/api/login", (req, res) => {
                     res.json({ success: false, message: "username or password incorrect" });
                 }
                 else {
-                    const token = jwt.sign({ userId: user._id, username: user.username }, secretkey, { expiresIn: "24h" });
-                    res.json({ success: true, message: "Authentication successful", token: token });
+                    req.login(user, (er) => {
+                        if (er) {
+                            res.json({ success: false, message: er });
+                        }
+                        else {
+                            res.json({ success: true, message: "You are logged in" });
+                        }
+                    });
                 }
             }
         })(req, res);
     }
+});
+
+app.post("/api/logout", (req, res) => {
+    console.log(req.user);
+    console.log(req.isAuthenticated());
+    // req.logout();
+    res.json({ success: true, message: "logout successful" });
 });
