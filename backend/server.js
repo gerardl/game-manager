@@ -18,7 +18,12 @@ app.use(session({
     saveUninitialized: false
 }))
 
-app.use(cors())
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true
+}
+
+app.use(cors(corsOptions))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -126,6 +131,14 @@ app.post("/api/login", (req, res) => {
                 }
             }
         })(req, res);
+    }
+});
+
+app.get("/api/user", (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ success: true, message: "User is authenticated", user: req.user });
+    } else {
+        res.json({ success: false, message: "User is not authenticated" });
     }
 });
 

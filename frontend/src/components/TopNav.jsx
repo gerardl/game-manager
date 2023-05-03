@@ -5,8 +5,24 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LinkContainer } from 'react-router-bootstrap'
+import axios from 'axios';
 
-function Header() {
+function TopNav() {
+  function isAuthenticated() {
+    axios.get(`http://localhost:8099/api/user`, { withCredentials: true })
+      .then(res => {
+        console.log(res.data)
+      })
+  }
+  function authenticate() {
+    axios.post(`http://localhost:8099/api/login`, {
+      username: 'userguy',
+      password: 'password'
+    }, { withCredentials: true }).then(res => {
+      console.log(res.data)
+    })
+  }
+
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -25,6 +41,8 @@ function Header() {
             <LinkContainer to="/login">
                 <Nav.Link>Login</Nav.Link>
             </LinkContainer>
+            <Button onClick={authenticate}>Auth</Button>
+            <Button onClick={isAuthenticated}>Test</Button>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -43,7 +61,7 @@ function Header() {
   );
 }
 
-export default Header;
+export default TopNav;
 
 // function Header() {
 //     const [count, setCount] = useState(0);

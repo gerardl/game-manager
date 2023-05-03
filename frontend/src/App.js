@@ -1,5 +1,5 @@
 import './App.css';
-import Header from './components/Header'
+import Header from './components/TopNav'
 import LoginForm from './components/LoginForm'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from './views/Home';
