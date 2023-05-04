@@ -5,7 +5,7 @@ const session = require('express-session')
 const mongoose = require('mongoose')
 const passportLocalMongoose = require('passport-local-mongoose');
 const port = process.env.port || 8000
-const url = 'mongodb+srv://admin:test1234@cluster0.bqiaplq.mongodb.net/?retryWrites=true&w=majority'
+const url = process.env.MONGO_URI
 const cors = require('cors');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
