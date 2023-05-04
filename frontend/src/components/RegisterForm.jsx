@@ -4,7 +4,7 @@ import { useState } from 'react';
 import AccountService from '../services/account-service';
 import { useNavigate } from "react-router-dom";
 
-function RegisterForm() {
+function RegisterForm({ authenticated, onAuthChange }) {
     const navigate = useNavigate();
     const [loginDetails, setLoginDetails] = useState({userName: '', password: ''});
     const [loginMessage, setLoginMessage] = useState('');
@@ -13,6 +13,7 @@ function RegisterForm() {
         AccountService.register(loginDetails.userName, loginDetails.password)
             .then(response => {
                 if (response.data.success) {
+                    onAuthChange(true);
                     navigate("/");
                 } else {
                     setLoginMessage(response.data.message)
