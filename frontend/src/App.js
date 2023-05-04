@@ -1,13 +1,14 @@
 import './App.css';
 import Header from './components/TopNav'
-import CharacterForm from './components/CharacterForm'
+import MessageToast from './components/MessageToast';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from './views/Home';
 import Login from './views/Login';
 import Register from './views/Register';
 import Characters from './views/Characters'
+import ManageCharacter from './views/ManageCharacter';
 import Npcs from './views/Npcs';
-import NpcForm from './components/NpcForm';
+import ManageNpc from './views/ManageNpc';
 import Container from 'react-bootstrap/esm/Container';
 import AccountService from './services/account-service';
 import { useEffect, useState } from 'react';
@@ -30,12 +31,13 @@ function App() {
       <Router>
         <Header authenticated={isAuthenticated} onAuthChange={setIsAuthenticated} username={username} />
         <Container className='nav-margin'>
+          <MessageToast message="Sup bitches" bg="warning"/>
           <Routes>
             <Route path="" element={<Home />}></Route>
             <Route path="/characters" element={<Characters />}></Route>
-            <Route path="/characters/manage/:name?" element={<CharacterForm />}></Route>
+            <Route path="/characters/manage/:name?" element={<ManageCharacter />}></Route>
             <Route path="/npcs" element={<Npcs />}></Route>
-            <Route path="/npcs/manage/:name?" element={<NpcForm />}></Route>
+            <Route path="/npcs/manage/:name?" element={<ManageNpc />}></Route>
             <Route path="/login" element={<Login authenticated={isAuthenticated} onAuthChange={setIsAuthenticated} />}></Route>
             <Route path="/register" element={<Register authenticated={isAuthenticated} onAuthChange={setIsAuthenticated} />}></Route>
           </Routes>
