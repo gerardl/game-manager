@@ -2,6 +2,8 @@
 ---
 ### By Gerard Lucas  
 
+[Video Walkthrough](https://www.youtube.com/watch?v=F9ZlS_k0NhE)
+
 MMO Manager allows authorized users to add and update characters and npcs for an MMORPG. It is split into two seperate projects, a backend server using nodejs and express, and a front-end react single page application that acts as the user interface.  
 
 ## Back-End
