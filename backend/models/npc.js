@@ -9,8 +9,8 @@ const NPC = new Schema({
     strength: { type: Number, required: true },
     dexterity: { type: Number, required: true },
     constitution: { type: Number, required: true },
-    intelligence: { type: Number, required: true}
-    // todo: loot
+    intelligence: { type: Number, required: true},
+    gold: { type: Number, required: true}
 });
 
 module.exports = mongoose.model('NPC', NPC);

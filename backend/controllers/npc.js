@@ -1,51 +1,51 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport');
-const Character = require("../models/character");
+const NPC = require("../models/npc");
 
-router.get("/api/character/", (req, res) => {
+router.get("/api/npc/", (req, res) => {
     if (req.isAuthenticated()) {
-        Character.find({})
+        NPC.find({})
             .then((result) => res.json(result))
-            .catch((err) => res.json({ success: false, message: "Could not load characters: " + err }));
+            .catch((err) => res.json({ success: false, message: "Could not load npcs: " + err }));
     } else {
         res.status(401).send("User is not authenticated")
     }
 });
 
-router.get("/api/character/count", (req, res) => {
-    Character.estimatedDocumentCount()
+router.get("/api/npc/count", (req, res) => {
+    NPC.estimatedDocumentCount()
         .then((result) => res.json(result))
         .catch((err) => res.json({ success: false, message: "Could not load counts: " + err }));
 });
 
-router.get("/api/character/:name", (req, res) => {
+router.get("/api/npc/:name", (req, res) => {
     if (req.isAuthenticated()) {
-        Character.find({name: req.params.name})
+        NPC.find({name: req.params.name})
             .then((result) => res.json(result[0]))
-            .catch((err) => res.json({ success: false, message: "Could not load character. Error: " + err }));
+            .catch((err) => res.json({ success: false, message: "Could not load NPC. Error: " + err }));
     } else {
         res.status(401).send("User is not authenticated")
     }
 });
 
-router.post("/api/character/", (req, res, next) => {
+router.post("/api/npc/", (req, res, next) => {
     if (!req.isAuthenticated()) {
         res.status(401).send("User is not authenticated")
     }
-    const newChar = new Character(req.body.character)
-    newChar.save()
+    const newNPC = new NPC(req.body.npc)
+    newNPC.save()
         .then((result) => res.json(result))
         .catch((err) => next(err));
 });
 
-router.put("/api/character/", (req, res, next) => {
+router.put("/api/npc/", (req, res, next) => {
     if (!req.isAuthenticated()) {
         res.status(401).send("User is not authenticated")
     }
 
-    const newChar = new Character(req.body.character)
-    Character.findOneAndUpdate({ name: newChar.name }, newChar, { new: true })
+    const newNPC = new NPC(req.body.npc)
+    NPC.findOneAndUpdate({ name: newNPC.name }, newNPC, { new: true })
         .then((result) => res.json(result))
         .catch((err) => next(err));
 });

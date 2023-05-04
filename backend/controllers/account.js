@@ -11,6 +11,13 @@ router.get("/api/account/", (req, res) => {
     }
 });
 
+router.get("/api/account/count", (req, res) => {
+    User.estimatedDocumentCount()
+        .then((result) => res.json(result))
+        .catch((err) => res.json({ success: false, message: "Could not load counts: " + err }));
+});
+
+
 router.post("/api/account/register", (req, res) => {
     User.register(new User({ email: req.body.email, username: req.body.username }), req.body.password, function (err, user) {
         if (err) {

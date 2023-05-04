@@ -4,6 +4,9 @@ const AccountService = {
     isAuthenticated: () => {
         return api.get(`account/`)
     },
+    count: () => {
+        return api.get(`/account/count`)
+    },
     register: (userName, password) => {
         return api.post(`/account/register`, {
             username: userName,

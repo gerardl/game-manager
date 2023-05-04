@@ -4,6 +4,9 @@ const CharacterService = {
     getAll: () => {
         return api.get(`/character/`)
     },
+    count: () => {
+        return api.get(`/character/count`)
+    },
     get: (name) => {
         return api.get(`/character/${name}`)
     },

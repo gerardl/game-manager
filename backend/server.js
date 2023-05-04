@@ -42,6 +42,8 @@ const accountController = require('./controllers/account');
 app.use(accountController)
 const characterController = require('./controllers/character');
 app.use(characterController)
+const npcController = require('./controllers/npc');
+app.use(npcController)
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
