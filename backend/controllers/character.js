@@ -32,16 +32,24 @@ router.get("/api/character/:name", (req, res) => {
 router.post("/api/character/", (req, res, next) => {
     if (!req.isAuthenticated()) {
         res.status(401).send("User is not authenticated")
+        return
     }
     const newChar = new Character(req.body.character)
     newChar.save()
         .then((result) => res.json(result))
-        .catch((err) => next(err));
+        .catch((err) => {
+            if (err.code === 11000) {
+                res.status(500).send("A character with that name already exists")
+            } else {
+                res.status(500).send(err.message)
+            }
+        });
 });
 
 router.put("/api/character/", (req, res, next) => {
     if (!req.isAuthenticated()) {
         res.status(401).send("User is not authenticated")
+        return
     }
 
     const newChar = new Character(req.body.character)

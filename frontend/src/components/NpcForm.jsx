@@ -9,6 +9,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function NpcForm() {
     const [validated, setValidated] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const { name } = useParams();
     const navigate = useNavigate();
     const [npcDetails, setNpcDetails] = useState({
@@ -22,7 +23,7 @@ function NpcForm() {
             NpcService.get(name).then(response => {
                 setNpcDetails(response.data);
             }).catch(error => {
-                alert("Error:", error)
+                setErrorMessage(error.message)
             })
         }
     }, [])
@@ -41,7 +42,7 @@ function NpcForm() {
                         navigate("/npcs")
                     })
                     .catch(error => {
-                        console.log("Error:", error)
+                        setErrorMessage(error.response?.data ?? "An error occurred, please try again.")
                     })
             } else {
                 NpcService.add(npcDetails)
@@ -50,7 +51,7 @@ function NpcForm() {
                         navigate("/npcs")
                     })
                     .catch(error => {
-                        console.log("Error:", error)
+                        setErrorMessage(error.response?.data ?? "An error occurred, please try again.")
                     })
             }
         }
@@ -150,6 +151,11 @@ function NpcForm() {
                                 <Button variant="primary" type="submit">
                                     Save NPC
                                 </Button>
+                                { errorMessage.length > 0 && 
+                                    <Form.Text className="text-danger p-3">
+                                        {errorMessage}
+                                    </Form.Text>
+                                }
                             </Form.Group>
                         </Col>
                     </Row>

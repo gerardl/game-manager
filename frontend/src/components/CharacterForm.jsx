@@ -10,7 +10,7 @@ import Col from 'react-bootstrap/Col';
 
 function CharacterForm() {
     const [validated, setValidated] = useState(false);
-
+    const [errorMessage, setErrorMessage] = useState('');
     const { name } = useParams();
     const navigate = useNavigate();
     const [characterDetails, setCharacterDetails] = useState({
@@ -24,7 +24,7 @@ function CharacterForm() {
             CharacterService.get(name).then(response => {
                 setCharacterDetails(response.data);
             }).catch(error => {
-                alert("Error:", error)
+                setErrorMessage(error.message)
             })
         }
     }, [])
@@ -43,7 +43,7 @@ function CharacterForm() {
                         navigate("/characters")
                     })
                     .catch(error => {
-                        console.log("Error:", error)
+                        setErrorMessage(error.response?.data ?? "An error occurred, please try again.")
                     })
             } else {
                 CharacterService.add(characterDetails)
@@ -52,7 +52,8 @@ function CharacterForm() {
                         navigate("/characters")
                     })
                     .catch(error => {
-                        console.log("Error:", error)
+                        console.log(error)
+                        setErrorMessage(error.response?.data ?? "An error occurred, please try again.")
                     })
             }
         }
@@ -151,6 +152,11 @@ function CharacterForm() {
                                 <Button variant="primary" type="submit" className="pull-right">
                                     Save Character
                                 </Button>
+                                { errorMessage.length > 0 && 
+                                    <Form.Text className="text-danger p-3">
+                                        {errorMessage}
+                                    </Form.Text>
+                                }
                             </Form.Group>
                         </Col>
                     </Row>

@@ -7,6 +7,8 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LinkContainer } from 'react-router-bootstrap'
 import AccountService from '../services/account-service';
 import { useNavigate } from "react-router-dom";
+import { FaGamepad } from 'react-icons/fa/';
+import { IconContext } from "react-icons";
 
 function TopNav({ authenticated, onAuthChange, username }) {
   const navigate = useNavigate();
@@ -19,10 +21,13 @@ function TopNav({ authenticated, onAuthChange, username }) {
   }
 
   return (
-    <Navbar  bg="dark" variant="dark" expand="lg" fixed="top">
+    <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
       <Container>
         <LinkContainer to="/">
-          <Navbar.Brand>MMO Manager</Navbar.Brand>
+          <Navbar.Brand>
+              <FaGamepad color="aqua" fontSize="1.2em"/> 
+              <span style={{marginLeft:"5px"}}>MMO Manager</span>
+            </Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle />
         <Navbar.Collapse id="basic-navbar-nav">

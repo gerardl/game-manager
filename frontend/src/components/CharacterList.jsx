@@ -12,7 +12,7 @@ function CharacterList() {
         CharacterService.getAll().then(response => {
             setCharacters(response.data);
         }).catch(error => {
-            alert(`Error: ${error.response.data}`)
+            console.log(error)
         })
     }, [])
 

@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
-
+  
   useEffect(() => {
     AccountService.isAuthenticated().then(response => {
         setIsAuthenticated(response.data.success)
@@ -31,7 +31,7 @@ function App() {
       <Router>
         <Header authenticated={isAuthenticated} onAuthChange={setIsAuthenticated} username={username} />
         <Container className='nav-margin'>
-          <MessageToast message="Sup bitches" bg="warning"/>
+          <MessageToast message="test" bg="warning" show={false}/>
           <Routes>
             <Route path="" element={<Home />}></Route>
             <Route path="/characters" element={<Characters />}></Route>

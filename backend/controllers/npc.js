@@ -32,16 +32,24 @@ router.get("/api/npc/:name", (req, res) => {
 router.post("/api/npc/", (req, res, next) => {
     if (!req.isAuthenticated()) {
         res.status(401).send("User is not authenticated")
+        return
     }
     const newNPC = new NPC(req.body.npc)
     newNPC.save()
         .then((result) => res.json(result))
-        .catch((err) => next(err));
+        .catch((err) => {
+            if (err.code === 11000) {
+                res.status(500).send("An npc with that name already exists")
+            } else {
+                res.status(500).send(err.message)
+            }
+        });
 });
 
 router.put("/api/npc/", (req, res, next) => {
     if (!req.isAuthenticated()) {
         res.status(401).send("User is not authenticated")
+        return
     }
 
     const newNPC = new NPC(req.body.npc)

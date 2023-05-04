@@ -12,7 +12,7 @@ function NpcList() {
         NpcService.getAll().then(response => {
             setNpcs(response.data);
         }).catch(error => {
-            alert(`Error: ${error.response.data}`)
+            console.log(error)
         })
     }, [])
 
