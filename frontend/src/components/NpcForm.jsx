@@ -7,6 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 
 function NpcForm() {
+    const [validated, setValidated] = useState(false);
     const { name } = useParams();
     const navigate = useNavigate();
     const [npcDetails, setNpcDetails] = useState({
@@ -25,38 +26,47 @@ function NpcForm() {
         }
     }, [])
 
-    const handleSubmit = () => {
-        if (npcDetails._id?.length > 0) {
-            NpcService.update(npcDetails)
-                .then(response => {
-                    setNpcDetails(response.data)
-                    navigate("/npcs")
-                })
-                .catch(error => {
-                    console.log("Error:", error)
-                })
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        event.preventDefault();
+        event.stopPropagation();
+        if (form.checkValidity() === false) {
+            // could show messages here
         } else {
-            NpcService.add(npcDetails)
-                .then(response => {
-                    setNpcDetails(response.data)
-                    navigate("/npcs")
-                })
-                .catch(error => {
-                    console.log("Error:", error)
-                })
+            if (npcDetails._id?.length > 0) {
+                NpcService.update(npcDetails)
+                    .then(response => {
+                        setNpcDetails(response.data)
+                        navigate("/npcs")
+                    })
+                    .catch(error => {
+                        console.log("Error:", error)
+                    })
+            } else {
+                NpcService.add(npcDetails)
+                    .then(response => {
+                        setNpcDetails(response.data)
+                        navigate("/npcs")
+                    })
+                    .catch(error => {
+                        console.log("Error:", error)
+                    })
+            }
         }
-        
+
+        setValidated(true);        
     }
 
     return (
         <Card>
             <Card.Header>Manage NPC</Card.Header>
             <Card.Body>
-                <Form>
+                <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formNpcName">
                         <Form.Label>NPC Name</Form.Label>
                         <Form.Control type="text" placeholder="Enter npc name" disabled={npcDetails._id?.length > 0}
                             value={npcDetails.name}
+                            required
                             onChange={e => setNpcDetails({...npcDetails, name: e.target.value})}
                         />
                         <Form.Text className="text-muted">
@@ -75,6 +85,7 @@ function NpcForm() {
                         <Form.Label>Level</Form.Label>
                         <Form.Control type="number" placeholder="Enter npc level" 
                             value={npcDetails.level}
+                            required
                             onChange={e => setNpcDetails({...npcDetails, level: e.target.value})}
                         />
                     </Form.Group>
@@ -82,6 +93,7 @@ function NpcForm() {
                         <Form.Label>Strength</Form.Label>
                         <Form.Control type="number" placeholder="Enter npc strength"
                             value={npcDetails.strength}
+                            required
                             onChange={e => setNpcDetails({...npcDetails, strength: e.target.value})}
                          />
                     </Form.Group>
@@ -89,6 +101,7 @@ function NpcForm() {
                         <Form.Label>Dexterity</Form.Label>
                         <Form.Control type="number" placeholder="Enter npc dexterity"
                             value={npcDetails.dexterity}
+                            required
                             onChange={e => setNpcDetails({...npcDetails, dexterity: e.target.value})}
                          />
                     </Form.Group>
@@ -96,6 +109,7 @@ function NpcForm() {
                         <Form.Label>Constitution</Form.Label>
                         <Form.Control type="number" placeholder="Enter npc constitution"
                             value={npcDetails.constitution}
+                            required
                             onChange={e => setNpcDetails({...npcDetails, constitution: e.target.value})}
                          />
                     </Form.Group>
@@ -103,6 +117,7 @@ function NpcForm() {
                         <Form.Label>Intelligence</Form.Label>
                         <Form.Control type="number" placeholder="Enter npc intelligence"
                             value={npcDetails.intelligence}
+                            required
                             onChange={e => setNpcDetails({...npcDetails, intelligence: e.target.value})}
                          />
                     </Form.Group>
@@ -110,6 +125,7 @@ function NpcForm() {
                         <Form.Label>Gold Dropped</Form.Label>
                         <Form.Control type="number" placeholder="Enter npc gold"
                             value={npcDetails.gold}
+                            required
                             onChange={e => setNpcDetails({...npcDetails, gold: e.target.value})}
                          />
                     </Form.Group>
@@ -117,12 +133,13 @@ function NpcForm() {
                         <Form.Label>Experience Given</Form.Label>
                         <Form.Control type="number" placeholder="Enter npc experience"
                             value={npcDetails.experienceGiven}
+                            required
                             onChange={e => setNpcDetails({...npcDetails, experienceGiven: e.target.value})}
                          />
                     </Form.Group>
                     <Form.Group>
-                        <Button variant="primary" onClick={handleSubmit}>
-                            Save
+                        <Button variant="primary" type="submit">
+                            Save NPC
                         </Button>
                     </Form.Group>
                 </Form>

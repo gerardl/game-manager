@@ -7,6 +7,8 @@ import { useParams, useNavigate } from "react-router-dom";
 
 
 function CharacterForm() {
+    const [validated, setValidated] = useState(false);
+
     const { name } = useParams();
     const navigate = useNavigate();
     const [characterDetails, setCharacterDetails] = useState({
@@ -25,38 +27,47 @@ function CharacterForm() {
         }
     }, [])
 
-    const handleSubmit = () => {
-        if (characterDetails._id?.length > 0) {
-            CharacterService.update(characterDetails)
-                .then(response => {
-                    setCharacterDetails(response.data)
-                    navigate("/characters")
-                })
-                .catch(error => {
-                    console.log("Error:", error)
-                })
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        event.preventDefault();
+        event.stopPropagation();
+        if (form.checkValidity() === false) {
+            // could show messages here
         } else {
-            CharacterService.add(characterDetails)
-                .then(response => {
-                    setCharacterDetails(response.data)
-                    navigate("/characters")
-                })
-                .catch(error => {
-                    console.log("Error:", error)
-                })
+            if (characterDetails._id?.length > 0) {
+                CharacterService.update(characterDetails)
+                    .then(response => {
+                        setCharacterDetails(response.data)
+                        navigate("/characters")
+                    })
+                    .catch(error => {
+                        console.log("Error:", error)
+                    })
+            } else {
+                CharacterService.add(characterDetails)
+                    .then(response => {
+                        setCharacterDetails(response.data)
+                        navigate("/characters")
+                    })
+                    .catch(error => {
+                        console.log("Error:", error)
+                    })
+            }
         }
-        
+
+        setValidated(true);
     }
 
     return (
         <Card>
             <Card.Header>Manage Character</Card.Header>
             <Card.Body>
-                <Form>
+                <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formCharacterName">
                         <Form.Label>Character Name</Form.Label>
                         <Form.Control type="text" placeholder="Enter character name" disabled={characterDetails._id?.length > 0}
                             value={characterDetails.name}
+                            required
                             onChange={e => setCharacterDetails({...characterDetails, name: e.target.value})}
                         />
                         <Form.Text className="text-muted">
@@ -66,6 +77,7 @@ function CharacterForm() {
                         <Form.Label>Class</Form.Label>
                         <Form.Control type="text" placeholder="Enter character class"
                             value={characterDetails.class}
+                            required
                             onChange={e => setCharacterDetails({...characterDetails, class: e.target.value})}
                          />
                     </Form.Group>
@@ -73,6 +85,7 @@ function CharacterForm() {
                         <Form.Label>Level</Form.Label>
                         <Form.Control type="number" placeholder="Enter character level" 
                             value={characterDetails.level}
+                            required
                             onChange={e => setCharacterDetails({...characterDetails, level: e.target.value})}
                         />
                     </Form.Group>
@@ -80,6 +93,7 @@ function CharacterForm() {
                         <Form.Label>Experience</Form.Label>
                         <Form.Control type="number" placeholder="Enter character experience"
                             value={characterDetails.experience}
+                            required
                             onChange={e => setCharacterDetails({...characterDetails, experience: e.target.value})}
                          />
                     </Form.Group>
@@ -87,6 +101,7 @@ function CharacterForm() {
                         <Form.Label>Strength</Form.Label>
                         <Form.Control type="number" placeholder="Enter character strength"
                             value={characterDetails.strength}
+                            required
                             onChange={e => setCharacterDetails({...characterDetails, strength: e.target.value})}
                          />
                     </Form.Group>
@@ -94,6 +109,7 @@ function CharacterForm() {
                         <Form.Label>Dexterity</Form.Label>
                         <Form.Control type="number" placeholder="Enter character dexterity"
                             value={characterDetails.dexterity}
+                            required
                             onChange={e => setCharacterDetails({...characterDetails, dexterity: e.target.value})}
                          />
                     </Form.Group>
@@ -101,6 +117,7 @@ function CharacterForm() {
                         <Form.Label>Constitution</Form.Label>
                         <Form.Control type="number" placeholder="Enter character constitution"
                             value={characterDetails.constitution}
+                            required
                             onChange={e => setCharacterDetails({...characterDetails, constitution: e.target.value})}
                          />
                     </Form.Group>
@@ -108,6 +125,7 @@ function CharacterForm() {
                         <Form.Label>Intelligence</Form.Label>
                         <Form.Control type="number" placeholder="Enter character intelligence"
                             value={characterDetails.intelligence}
+                            required
                             onChange={e => setCharacterDetails({...characterDetails, intelligence: e.target.value})}
                          />
                     </Form.Group>
@@ -115,12 +133,13 @@ function CharacterForm() {
                         <Form.Label>Gold</Form.Label>
                         <Form.Control type="number" placeholder="Enter character gold"
                             value={characterDetails.gold}
+                            required
                             onChange={e => setCharacterDetails({...characterDetails, gold: e.target.value})}
                          />
                     </Form.Group>
                     <Form.Group>
-                        <Button variant="primary" onClick={handleSubmit}>
-                            Save
+                        <Button variant="primary" type="submit">
+                            Save Character
                         </Button>
                     </Form.Group>
                 </Form>
